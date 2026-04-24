@@ -1,0 +1,17 @@
+# Test dependencies
+pytest==7.4.0
+allure-pytest==2.13.1
+requests==2.32.3
+loguru==0.7.2
+
+# Supporting packages
+allure-python-commons==2.13.1
+attrs==25.3.0
+certifi==2025.1.31
+charset-normalizer==3.4.1
+colorama==0.4.6
+idna==3.10
+iniconfig==2.1.0
+packaging==24.2
+pluggy==1.5.0
+urllib3==2.3.0
