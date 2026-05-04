@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morris | QA 自動化學習筆記</title>
+    <style>
+        /* 全局設定：舒適的閱讀字體與背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f7fb; /* 極淺的藍色背景 */
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 頂部標題列：深藍色質感 */
+        header {
+            background-color: #1976d2;
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: #bbdefb;
+        }
+
+        /* 主要內容容器 */
+        .container {
+            max-width: 800px; /* 筆記本寬度，適合閱讀 */
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* 獨立區塊 (Card) 設計 */
+        .assignment-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 6px solid #2196f3; /* 左側亮藍色標籤線 */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .assignment-card:hover {
+            transform: translateY(-3px); /* 滑鼠游標經過時微微浮起 */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* 作業標題 */
+        .assignment-card h2 {
+            margin-top: 0;
+            color: #0d47a1; /* 深藍色字體 */
+            border-bottom: 2px solid #e3f2fd;
+            padding-bottom: 10px;
+        }
+
+        /* 內容清單排版 */
+        .assignment-card ul {
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .assignment-card li {
+            margin-bottom: 8px;
+        }
+
+        /* 強調文字 (如 PASS/FAIL) */
+        .highlight {
+            font-weight: bold;
+            color: #d32f2f; /* 用一點紅色強調異常或重要字眼 */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Morris 的 QA 自動化學習筆記</h1>
+        <p>紀錄從手動測試走向 Python 自動化架構的每一步</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 作業一 -->
+        <div class="assignment-card">
+            <h2>作業一：API 數據抓取與報表自動化</h2>
+            <p><strong>目標：</strong> 取代人工撈單，自動化整理後台遊戲數據。</p>
+            <ul>
+                <li>根據兩個 API 抓取資料，轉換後台對應數據並自動寫入 Google Sheet。</li>
+                <li>將數據清晰分類為三大報表：「盈利報表」、「會員點數明細」、「異常局號」。</li>
+                <li><strong>異常局號定義邏輯：</strong> 精準判斷玩家在「追殺局」中，贏的金額是否超過其投注額的 <span class="highlight">5%</span>。</li>
+            </ul>
+        </div>
+
+        <!-- 作業二 -->
+        <div class="assignment-card">
+            <h2>作業二：Allure 測試報告整合與部署</h2>
+            <p><strong>目標：</strong> 讓測試結果視覺化，並實現團隊無障礙資訊共享。</p>
+            <ul>
+                <li>將作業一產出的 Google Sheet 測試內容整合進 Allure 測試框架中。</li>
+                <li>自動執行腳本後，精準判斷異常資料並於報告中標示為 <strong>PASS</strong> 或 <span class="highlight">FAIL</span>。</li>
+                <li>建立內網 IP 伺服器或轉跳外網服務，提供固定連結，讓所有團隊成員可以直接點擊檢視最新報告。</li>
+            </ul>
+        </div>
+
+        <!-- 作業三 -->
+        <div class="assignment-card">
+            <h2>作業三：QA 測試產能分析程式</h2>
+            <p><strong>目標：</strong> 高效量化團隊產能，並具備強健的防呆機制。</p>
+            <ul>
+                <li>讀取 Google Sheet 數據，自動統計「單日進測量」與「單一日進測平均值」。</li>
+                <li>數據排序，列出歷史前六大進測高峰日。</li>
+                <li><strong>高效率與防呆：</strong> 程式執行注重效能，並具備表頭驗證機制。若發現異常表頭會自動阻擋並明確顯示錯誤，確保分析準確性。</li>
+            </ul>
+        </div>
+
+        <!-- 作業四 -->
+        <div class="assignment-card">
+            <h2>作業四：Git / GitHub 版控實戰</h2>
+            <p><strong>目標：</strong> 建立資深工程師的基礎素養，確保程式碼安全與可追溯性。</p>
+            <ul>
+                <li>練習將本地端程式碼上傳至 GitHub。</li>
+                <li>落實「推版前再三確認」的良好開發習慣。</li>
+                <li>熟悉 <strong>Revert (退版)</strong> 流程，確保當錯誤發生或遇到預期外狀況時，能第一時間安全還原程式碼。</li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+</html>
