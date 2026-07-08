@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Test and report outputs
+allure-results/
+allure-report/
+03_Allure_test_simple/allure-report/
+03_Allure_test_simple/allure-results/
+03_Allure_test_simple/__pycache__/
+
+# Generated Jira reports
+04_Jira/jira_worklog_detail_*.csv
+04_Jira/jira_worklog_summary_*.csv
+
+# Local spreadsheet exports
+*.xlsx
