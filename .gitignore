@@ -16,6 +16,12 @@ allure-report/
 # Generated Jira reports
 04_Jira/jira_worklog_detail_*.csv
 04_Jira/jira_worklog_summary_*.csv
+04_Jira/jira_bug_detail_*.csv
+04_Jira/jira_bug_summary_*.csv
+04_Jira/jira_config.local.json
+04_Jira/launcher_error.log
+05_jirabug/
+dist/
 
 # Local spreadsheet exports
 *.xlsx
