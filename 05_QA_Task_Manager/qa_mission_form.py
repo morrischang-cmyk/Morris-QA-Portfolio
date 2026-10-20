@@ -169,7 +169,7 @@ def load_rules() -> dict[str, Any]:
         "project_key": "QA",
         "issue_type": "Task",
         "assignee": "arsene211",
-        "epic_links": ["HCI-KX", "HCI-LY", "HCI-NW", "HCI-V8", "HCI-VP", "HCI-YL"],
+        "epic_links": ["HCI-KX", "HCI-LY", "HCI-NW", "HCI-V8", "HCI-VP", "HCI-YL", "後台"],
         "headings": {
             "test_items": "進測項目",
             "environment": "驗證環境",
@@ -197,6 +197,7 @@ def load_rules() -> dict[str, Any]:
             "HCI-V8": "QA-45",
             "HCI-VP": "QA-1724",
             "HCI-YL": "QA-3782",
+            "後台": "QA-8601",
         },
         "field_aliases": {
             "start_date": ["Start Date", "開始日期"],

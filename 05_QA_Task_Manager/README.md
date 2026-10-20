@@ -14,7 +14,7 @@
 - 從主任務 Description 擷取「進測項目」到「驗證環境」之間的內容。
 - 驗證環境及驗證版號和進測項目一樣，直接從主任務 Description 的對應區段擷取。
 - 測試案例由使用者填寫；開始日期及到期日可從日曆點選，顯示格式如 `5/八月/25`，之後會各自寫入 Jira Create 畫面的同名欄位。
-- Epic Link 提供 HCI-KX、HCI-LY、HCI-NW、HCI-V8、HCI-VP、HCI-YL 六個選項。
+- Epic Link 提供 HCI-KX、HCI-LY、HCI-NW、HCI-V8、HCI-VP、HCI-YL、後台七個選項；選擇「後台」時會連結到 Jira 的後台版本 Epic。
 - 依 `qa_mission_rules.json` 的環境對照表自動帶入代理，並支援同一張主任務包含多個環境。
 - 檢查每一個 Jira QA_Mission 欄位是否都有值，不會另外組成一段輸出文字。
 - 依 QA_Mission 模板格式寫入 Jira Description。

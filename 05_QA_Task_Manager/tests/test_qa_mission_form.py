@@ -14,6 +14,7 @@ from qa_mission_form import (
     description_lines,
     extract_section,
     format_jira_date,
+    load_rules,
     resolve_environment_agents,
     select_latest_release_block,
     validate_date,
@@ -21,6 +22,11 @@ from qa_mission_form import (
 
 
 class QaMissionFormTest(unittest.TestCase):
+    def test_backend_epic_option_maps_to_jira_epic(self) -> None:
+        rules = load_rules()
+        self.assertIn("後台", rules["epic_links"])
+        self.assertEqual(rules["epic_link_keys"]["後台"], "QA-8601")
+
     def setUp(self) -> None:
         self.rules = {
             "headings": {
