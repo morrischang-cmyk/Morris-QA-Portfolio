@@ -141,6 +141,31 @@ class QaMissionFormTest(unittest.TestCase):
         selected = select_latest_release_block(lines, "[R2] 標題尚未更新", "進測項目")
         self.assertEqual(selected, ["*R3*", "[進測項目] 第三版"])
 
+    def test_qa_release_block_after_preamble_is_parsed(self) -> None:
+        self.rules["environment_agent_map"] = {"V8 QA": "[V8代理] 2(轉帳) 1(單一)"}
+        self.rules["description_boundaries"].append("通知時間")
+        issue = {
+            "key": "HCIYL-21139",
+            "fields": {
+                "summary": "[V8][QA][R1] 測試",
+                "reporter": {"name": "pm-user"},
+                "description": (
+                    "進測前提醒\n----\n*QA R1*\n"
+                    "[進測項目]\n遊戲驗證\n"
+                    "[驗證環境] V8-QA\n"
+                    "[驗證版號] 前端：287a37b5fd / 後台：pre-28.0-rc1\n"
+                    "[通知時間] 2026/10/15"
+                ),
+            },
+        }
+
+        result = build_mission_data(issue, "https://jira.example.com", self.rules)
+
+        self.assertEqual(result["test_items"], "遊戲驗證")
+        self.assertEqual(result["environment"], "V8-QA")
+        self.assertEqual(result["version"], "前端：287a37b5fd / 後台：pre-28.0-rc1")
+        self.assertEqual(result["agent"], "[V8代理] 2(轉帳) 1(單一)")
+
     def test_date_validation(self) -> None:
         self.assertEqual(validate_date("5/八月/25", "開始日期"), date(2025, 8, 5))
         self.assertEqual(format_jira_date(date(2025, 8, 5)), "5/八月/25")

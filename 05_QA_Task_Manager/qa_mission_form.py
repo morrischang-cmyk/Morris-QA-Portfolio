@@ -318,17 +318,24 @@ def extract_section_aliases(
 def release_number_from_block(block: list[str], test_item_headings: Any) -> int | None:
     if not block:
         return None
-    direct = re.fullmatch(r"\**\s*R(\d+)\s*\**", block[0].strip(), flags=re.IGNORECASE)
+
+    def release_number(value: str) -> int | None:
+        normalized = value.strip().strip("*_~ ").strip()
+        normalized = normalized.strip("[]【】()（）").strip()
+        matched = re.fullmatch(
+            r"(?:QA[\s_-]*)?R(\d+)", normalized, flags=re.IGNORECASE
+        )
+        return int(matched.group(1)) if matched else None
+
+    direct = release_number(block[0])
     if direct:
-        return int(direct.group(1))
+        return direct
     for heading in heading_aliases(test_item_headings):
         matched, inline_value = match_heading_line(block[0], heading)
         if matched:
-            inline = re.fullmatch(
-                r"\**\s*R(\d+)\s*\**", inline_value.strip(), flags=re.IGNORECASE
-            )
+            inline = release_number(inline_value)
             if inline:
-                return int(inline.group(1))
+                return inline
     return None
 
 
@@ -350,10 +357,16 @@ def select_latest_release_block(
         return lines
 
     ranked = [release_number_from_block(block, test_item_headings) for block in blocks]
-    summary_releases = [int(value) for value in re.findall(r"(?:^|[^A-Z0-9])R(\d+)(?:[^0-9]|$)", summary, flags=re.IGNORECASE)]
     available = [rank for rank in ranked if rank is not None]
     if not available:
-        return blocks[0] if summary_releases else lines
+        for block in blocks:
+            if any(
+                match_heading_line(line, heading)[0]
+                for line in block
+                for heading in heading_aliases(test_item_headings)
+            ):
+                return block
+        return lines
 
     target = max(available)
     return blocks[ranked.index(target)]
