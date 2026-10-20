@@ -6,12 +6,16 @@ __pycache__/
 .venv/
 venv/
 
+# Editor settings
+.vscode/
+
 # Test and report outputs
 allure-results/
+allure-results-simple/
 allure-report/
-03_Allure_test_simple/allure-report/
-03_Allure_test_simple/allure-results/
-03_Allure_test_simple/__pycache__/
+
+# Downloaded executable used by share_on_web.py
+cloudflared.exe
 
 # Generated Jira reports
 04_Jira/jira_worklog_detail_*.csv
@@ -20,6 +24,8 @@ allure-report/
 04_Jira/jira_bug_summary_*.csv
 04_Jira/jira_config.local.json
 04_Jira/launcher_error.log
+06_QA_Task_Manager/task_manager_config.local.json
+06_QA_Task_Manager/launcher_error.log
 05_jirabug/
 dist/
 

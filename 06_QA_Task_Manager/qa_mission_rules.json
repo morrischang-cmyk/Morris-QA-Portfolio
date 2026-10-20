@@ -1,0 +1,96 @@
+{
+  "template_name": "QA_Mission",
+  "project_key": "QA",
+  "issue_type": "Task",
+  "assignee": "arsene211",
+  "testers": [
+    {"username": "arthur734"},
+    {"username": "morris706"},
+    {"username": "arsene211"},
+    {"username": "peter210"},
+    {"username": "rose603"},
+    {"username": "ralflin460", "title_name": "ralf"},
+    {"username": "leo296"},
+    {"username": "ben654"},
+    {"username": "joey209"},
+    {"username": "mincy295"},
+    {"username": "lisa735"},
+    {"username": "lily265"},
+    {"username": "lydia736"}
+  ],
+  "mattermost_names": {
+    "arthur734": "arthur",
+    "morris706": "morrischang",
+    "arsene211": "arsene",
+    "peter210": "peterlin",
+    "rose603": "rose",
+    "ralflin460": "ralflin",
+    "leo296": "qa_leo",
+    "ben654": "benlin",
+    "joey209": "joey",
+    "mincy295": "mincy",
+    "lisa735": "lisali",
+    "lily265": "lily",
+    "lydia736": "lydiasong"
+  },
+  "epic_links": [
+    "HCI-KX",
+    "HCI-LY",
+    "HCI-NW",
+    "HCI-V8",
+    "HCI-VP",
+    "HCI-YL"
+  ],
+  "headings": {
+    "test_items": "進測項目",
+    "environment": "驗證環境",
+    "version": ["驗證版號", "驗證版本"]
+  },
+  "description_boundaries": [
+    "遊戲連結",
+    "後台連結",
+    "V8代理",
+    "YL代理",
+    "代理",
+    "通知時間"
+  ],
+  "fixed_links": {
+    "game": "https://game.example.internal/login?menuId=1",
+    "backend": "https://qa-lab.example.internal/"
+  },
+  "environment_agent_map": {
+    "YL SIT": "[YL代理] 1(轉帳) 2(單一)",
+    "LY SIT": "[LY代理] 1(轉帳) 2(單一)",
+    "V8 SIT": "[V8代理] 2(轉帳) 1(單一)",
+    "KX SIT": "[KX代理] 7(轉帳) 8(單一)",
+    "YL WC": "[YL代理] 72762(轉帳) 800022(轉帳) 800021(單一)",
+    "LY UAT": "[LY代理] 201437(轉帳) 201438(單一)",
+    "V8 UAT": "[V8代理] 71198(轉帳) 71199(單一)",
+    "KX UAT": "[KX代理] 62161(轉帳) 62162(單一)",
+    "V8 QA": "[V8代理] 2(轉帳) 1(單一)",
+    "YL QA": "[YL代理] 2(轉帳) 1(單一)",
+    "LY QA": "[LY代理] 2(轉帳) 1(單一)"
+  },
+  "epic_link_keys": {
+    "HCI-KX": "QA-41",
+    "HCI-LY": "QA-44",
+    "HCI-NW": "QA-42",
+    "HCI-V8": "QA-45",
+    "HCI-VP": "QA-1724",
+    "HCI-YL": "QA-3782"
+  },
+  "field_aliases": {
+    "start_date": [
+      "Start Date",
+      "開始日期"
+    ],
+    "due_date": [
+      "Due Date",
+      "到期日"
+    ],
+    "epic_link": [
+      "Epic Link",
+      "Epic link"
+    ]
+  }
+}

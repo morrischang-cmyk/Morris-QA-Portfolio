@@ -1,0 +1,7 @@
+tls.local/
+mattermost_config.local.json
+redis_config.local.json
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env

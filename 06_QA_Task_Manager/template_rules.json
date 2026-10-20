@@ -1,0 +1,12 @@
+{
+  "copy_fields": [
+    "description",
+    "priority",
+    "labels",
+    "components",
+    "fixVersions",
+    "versions",
+    "environment"
+  ],
+  "fallback_subtask_issue_type": "Sub-task"
+}

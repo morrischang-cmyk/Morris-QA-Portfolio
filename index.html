@@ -137,6 +137,18 @@
                 <li>整理成可點擊執行的 GUI 工具，並提供本機使用說明。</li>
             </ul>
         </section>
+
+        <section class="assignment-card">
+            <h2>作業六：Jira QA 任務與子任務自動化工具</h2>
+            <p><strong>內容：</strong>將 QA Mission 建單、多人任務分派與 Mattermost 通知整合到公司內網 QA LAB，減少人工複製欄位、重複開單及通知遺漏。</p>
+            <ul>
+                <li>輸入 Jira 主任務單號後，自動解析最新 R 版的進測項目、驗證環境與驗證版號，並依環境帶入對應代理；自動帶入的內容仍可手動修改。</li>
+                <li>將測試案例、開始日期、到期日、Epic Link 與經辦人寫入對應的 Jira 欄位，直接建立 QA Mission。</li>
+                <li>支援複選多位測試人員，批次建立 Jira 子任務，自動設定經辦人與英文姓名標題，並填入原始預估時間、剩餘時間及獨立 Deadline。</li>
+                <li>透過 Redis DB3 管理 Jira 與 Mattermost 帳號對應，子任務建立後由機器人發送人員標記、QA 主單標題、連結及完成期限。</li>
+                <li>使用 Python、FastAPI 與 NiceGUI 開發，整合既有 QA LAB，並透過 GitLab main 分支進行版本控管與自動部署。</li>
+            </ul>
+        </section>
     </main>
 </body>
 </html>
