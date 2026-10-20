@@ -24,8 +24,8 @@ cloudflared.exe
 04_Jira/jira_bug_summary_*.csv
 04_Jira/jira_config.local.json
 04_Jira/launcher_error.log
-06_QA_Task_Manager/task_manager_config.local.json
-06_QA_Task_Manager/launcher_error.log
+05_QA_Task_Manager/task_manager_config.local.json
+05_QA_Task_Manager/launcher_error.log
 05_jirabug/
 dist/
 
