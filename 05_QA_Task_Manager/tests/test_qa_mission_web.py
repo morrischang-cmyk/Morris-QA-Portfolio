@@ -195,6 +195,8 @@ class QaMissionWebTest(unittest.TestCase):
         mapping = load_jira_mattermost_mapping()
         self.assertEqual(mapping["morris706"]["name"], "morrischang")
         self.assertEqual(mapping["ralflin460"]["name"], "ralflin")
+        self.assertEqual(mapping["leo296"]["name"], "qa_lin")
+        self.assertEqual(mapping["lydia736"]["name"], "lydia")
 
 
 if __name__ == "__main__":
