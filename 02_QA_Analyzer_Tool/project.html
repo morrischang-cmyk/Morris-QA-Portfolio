@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA 單號統計工具｜專案介紹</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", "Microsoft JhengHei", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f0f7fb; color: #25344a; line-height: 1.7; }
+    .hero { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 3.5rem 1.25rem; }
+    .wrap { width: min(960px, 100% - 2.5rem); margin: auto; }
+    .eyebrow { margin: 0 0 .75rem; color: #bbdefb; font-size: .8rem; letter-spacing: .18em; font-weight: 700; }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.2; }
+    .lead { max-width: 720px; margin: 1rem 0 0; color: #e4f1ff; font-size: 1.08rem; }
+    main { padding: 2rem 0 4rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .card, .section { background: white; border-radius: 12px; box-shadow: 0 3px 14px #173f6710; }
+    .card { padding: 1.25rem; border-top: 4px solid #2196f3; }
+    .card h2 { font-size: 1.08rem; margin: 0 0 .35rem; color: #0d47a1; }
+    .card p { margin: 0; }
+    .section { padding: 1.5rem; margin-top: 1rem; }
+    .section h2 { margin: 0 0 .65rem; color: #0d47a1; }
+    ul, ol { padding-left: 1.5rem; margin: .6rem 0 0; }
+    li { margin: .35rem 0; }
+    code { background: #eaf3fc; border-radius: 4px; padding: .12rem .35rem; overflow-wrap: anywhere; }
+    a { color: #0d47a1; font-weight: 600; }
+    .back { display: inline-block; margin-top: 1.2rem; color: white; text-decoration: none; }
+    .note { border-left: 4px solid #ffb74d; padding: .7rem 1rem; background: #fff8eb; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">MORRIS QA PORTFOLIO · PROJECT 03</p>
+      <h1>QA 單號統計工具</h1>
+      <p class="lead">將每月任務、Jira BUG 開單與 QA Worklog 整合成一份可視化的部門報告，方便檢視成員工作量與趨勢。</p>
+      <a class="back" href="../index.html">← 返回作品集首頁</a>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <section class="card"><h2>月份任務統計</h2><p>依年、月讀取 Google Sheets；當月合併已完成與進行中的任務，手動和自動化分開計算。</p></section>
+      <section class="card"><h2>Jira 即時資料</h2><p>按報告人統計 BUG，按實際 Worklog 換算工時與人日，並計算每個任務的平均 BUG 數。</p></section>
+      <section class="card"><h2>圖表與 PDF</h2><p>提供任務類型、成員工作量、發測高峰、每日趨勢及明細，並可儲存保留網頁版面的 PDF。</p></section>
+    </div>
+    <section class="section">
+      <h2>統計規則</h2>
+      <ul>
+        <li>同一單可以同時有手動與自動化負責人，兩類各自計數。</li>
+        <li>同一欄有多位負責人時，每位成員各計一單；已確認的拼字與別名會合併。</li>
+        <li>Worklog 以 Jira 記錄的秒數換算：1 天 = 8 小時，1 週 = 5 天。</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>本機啟動與修改</h2>
+      <ol>
+        <li>安裝 Python 3.10 以上版本，並確認電腦可連線至資料來源。</li>
+        <li>取得完整專案資料夾後，設定 <code>jira_config.local.json</code> 的 Jira Token。</li>
+        <li>雙擊 <code>START_HERE.bat</code>；首次啟動會安裝 Python 套件。</li>
+        <li>在本機開啟 <code>http://127.0.0.1:8766</code>，即可選月份產生報告。</li>
+      </ol>
+      <p class="note">網站專案含 Python、HTML、CSS 與 JavaScript 原始碼，可依團隊需求修改。Jira Token 檔案只保存在本機或內部分享包，不放在公開的作品集。</p>
+    </section>
+    <section class="section">
+      <h2>程式檔案</h2>
+      <ul>
+        <li><code>qa_analyzer_web.py</code>：網站服務、Jira 查詢、PDF 匯出。</li>
+        <li><code>qa_analyzer.py</code>：表單清理、姓名統一與任務統計。</li>
+        <li><code>web/</code>：頁面樣式、圖表與互動。</li>
+        <li><code>README.md</code>：完整資料規則、安裝與內網共用說明。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

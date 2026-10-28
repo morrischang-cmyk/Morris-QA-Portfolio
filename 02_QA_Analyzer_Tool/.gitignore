@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+tmp/
+.venv/
+venv/
+*.zip
+jira_config.local.json

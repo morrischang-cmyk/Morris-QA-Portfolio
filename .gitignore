@@ -28,6 +28,8 @@ cloudflared.exe
 05_QA_Task_Manager/launcher_error.log
 05_jirabug/
 dist/
+02_QA_Analyzer_Tool/jira_config.local.json
+02_QA_Analyzer_Tool/*.zip
 
 # Local spreadsheet exports
 *.xlsx

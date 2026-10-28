@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA單號統計工具</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">QA ANALYTICS</p>
+        <h1>QA單號統計工具</h1>
+        <p class="subtitle">整合 Google Sheets、Jira BUG 與 Worklog 即時資料，查看單號統計與部門績效趨勢</p>
+      </div>
+      <div class="connection-pill"><span></span>Google Sheets ＋ Jira 即時資料</div>
+    </header>
+
+    <section id="performanceView" class="tool-view">
+      <section class="panel source-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>月份部門報告</h2>
+            <p>一次整合單號統計、Jira BUG、Worklog 與成員績效；當月統計到今天</p>
+          </div>
+        </div>
+        <div class="performance-filter">
+          <label class="field">
+            <span>年份</span>
+            <select id="performanceYearSelect" aria-label="績效統計年份"></select>
+          </label>
+          <label class="field">
+            <span>月份</span>
+            <select id="performanceMonthSelect" aria-label="績效統計月份"></select>
+          </label>
+          <button id="performanceButton" class="button button-purple" type="button">產生月份報告</button>
+        </div>
+      </section>
+
+      <section id="performanceStatus" class="status-box hidden" aria-live="polite"></section>
+
+      <div id="performanceResults" class="hidden">
+        <section class="panel result-heading">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">QA DEPARTMENT REPORT</p>
+              <h2 id="performanceTitle">月份部門報告</h2>
+              <p>BUG 與任務合計為工作量參考，不代表單一績效評分</p>
+            </div>
+            <div class="report-actions">
+              <div id="performanceSourcePills" class="source-pills"></div>
+              <button id="savePdfButton" class="button button-muted" type="button">儲存 PDF</button>
+            </div>
+          </div>
+
+          <div class="metric-grid report-metrics">
+            <article class="metric-card">
+              <span>表單負責總次數</span>
+              <strong id="performanceTaskTotal">0</strong>
+              <small>同一格多人各計 1 單</small>
+            </article>
+            <article class="metric-card blue">
+              <span>手動負責次數</span>
+              <strong id="performanceManualTotal">0</strong>
+              <small>人員欄位統計</small>
+            </article>
+            <article class="metric-card purple">
+              <span>自動化負責次數</span>
+              <strong id="performanceAutomationTotal">0</strong>
+              <small>自動化欄位統計</small>
+            </article>
+            <article class="metric-card green">
+              <span>平均每工作日</span>
+              <strong id="performanceAvgPerDay">0</strong>
+              <small id="performanceWorkdays">0 個工作日</small>
+            </article>
+            <article class="metric-card red">
+              <span>BUG 開單數</span>
+              <strong id="performanceBugTotal">0</strong>
+              <small>依 Jira reporter 統計</small>
+            </article>
+            <article class="metric-card amber">
+              <span>Jira LOG 人日</span>
+              <strong id="performanceLogDays">0</strong>
+              <small>依 Jira Worklog 統計</small>
+            </article>
+            <article class="metric-card green">
+              <span>活躍成員</span>
+              <strong id="performanceActive">0</strong>
+              <small>區間內有 BUG、任務或 LOG</small>
+            </article>
+          </div>
+        </section>
+
+        <section class="report-visual-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading"><div><h2>任務類型占比</h2><p>手動任務與自動化任務的單數分布</p></div></div>
+            <div id="workTypeDonut" class="donut-layout"></div>
+          </article>
+          <article class="panel chart-panel">
+            <div class="panel-heading"><div><h2>成員工作量占比</h2><p>依 BUG＋接手任務顯示每一位成員</p></div></div>
+            <div id="memberShareDonut" class="donut-layout"></div>
+          </article>
+          <article class="panel peak-panel">
+            <div class="panel-heading"><div><h2>發測高峰日</h2><p>Google Sheets 任務數量 TOP 6</p></div></div>
+            <div id="reportPeakList" class="peak-list"></div>
+          </article>
+        </section>
+
+        <section class="panel ratio-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>每接 1 個任務平均開出的 BUG</h2>
+              <p>BUG 開單數 ÷ 接手任務數；任務數為 0 時顯示「—」</p>
+            </div>
+            <div class="ratio-overall"><span>部門平均</span><strong id="departmentBugTaskRatio">0</strong><small>BUG／任務</small></div>
+          </div>
+          <div id="bugTaskRatioChart" class="ratio-chart"></div>
+        </section>
+
+        <section class="performance-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>成員工作量比較</h2>
+                <p>藍色為接手任務，紅色為 BUG，黃色為 LOG 人日</p>
+              </div>
+            </div>
+            <div class="chart-legend"><span class="legend-task"></span>任務 <span class="legend-bug"></span>BUG <span class="legend-log"></span>LOG 人日</div>
+            <div id="memberChart" class="member-chart"></div>
+          </article>
+
+          <article class="panel chart-panel trend-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>每日趨勢</h2>
+                <p>比較日期區間內的任務與 BUG 變化</p>
+              </div>
+            </div>
+            <div class="chart-legend"><span class="legend-task"></span>任務 <span class="legend-bug"></span>BUG <span class="legend-log"></span>LOG 人日</div>
+            <div id="trendChart" class="trend-chart" role="img" aria-label="每日任務、BUG 與 Worklog 趨勢圖"></div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>成員績效明細</h2>
+              <p>依工作量合計排序，保留手動、自動化與 BUG 分類</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>人員</th><th>BUG</th><th>手動任務</th><th>自動化任務</th><th>接手任務</th><th>LOG 人日</th><th>工作量合計</th></tr></thead>
+              <tbody id="performanceBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
