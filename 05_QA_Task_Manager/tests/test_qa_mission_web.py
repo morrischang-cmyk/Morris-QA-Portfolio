@@ -179,6 +179,32 @@ class QaMissionWebTest(unittest.TestCase):
         self.assertIn("QA-11112", message)
         self.assertIn("10/22下班前完成", message)
 
+    def test_edited_mattermost_message_is_preserved(self) -> None:
+        edited = "@morrischang\n\n請先完成冒煙測試，再執行完整驗證。"
+        message, deadline = build_mattermost_subtask_message(
+            "QA-11112",
+            "QA 主單",
+            "https://jira.example/browse/QA-11112",
+            ["morris706"],
+            {},
+            date(2026, 10, 22),
+            edited,
+        )
+        self.assertEqual(message, edited)
+        self.assertEqual(deadline, date(2026, 10, 22))
+
+    def test_edited_mattermost_message_has_length_limit(self) -> None:
+        with self.assertRaisesRegex(ValueError, "16000"):
+            build_mattermost_subtask_message(
+                "QA-11112",
+                "QA 主單",
+                "https://jira.example/browse/QA-11112",
+                ["morris706"],
+                {},
+                date(2026, 10, 22),
+                "x" * 16001,
+            )
+
     def test_employee_data_mapping_uses_redis_jira_and_mm_fields(self) -> None:
         pairs = [
             "ralf",

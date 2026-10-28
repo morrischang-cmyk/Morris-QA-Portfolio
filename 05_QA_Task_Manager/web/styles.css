@@ -212,6 +212,10 @@ input::placeholder, textarea::placeholder { color: #66758d; }
 .tester-option:has(input:checked) { border-color: #5f8fff; background: rgba(47, 117, 255, .13); }
 .tester-option input { width: 16px; height: 16px; flex: 0 0 auto; accent-color: var(--blue); }
 .tester-name { min-width: 0; overflow: hidden; font-size: 13px; font-weight: 700; text-overflow: ellipsis; }
+.notification-editor { margin-top: 2px; }
+.notification-editor-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.notification-editor-header > span { color: var(--muted); font-size: 13px; font-weight: 700; }
+.notification-editor textarea { min-height: 190px; background: #16243a; }
 .created-subtask-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 7px; }
 .created-subtask-list a { color: #8ee5b5; font-weight: 800; text-decoration: none; }
 
@@ -244,6 +248,7 @@ input::placeholder, textarea::placeholder { color: #66758d; }
   .info-grid, .form-grid, .read-grid, .subtask-grid { grid-template-columns: 1fr; }
   .subtask-parent { align-items: flex-start; flex-direction: column; }
   .tester-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .notification-editor-header { align-items: flex-start; flex-direction: column; }
   .info-card.wide, .field-full { grid-column: auto; }
   .actions { align-items: stretch; flex-direction: column; }
 }

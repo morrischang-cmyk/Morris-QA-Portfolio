@@ -195,6 +195,14 @@
           <span>Deadline <b>*</b></span>
           <input id="subtaskDeadline" type="date">
         </label>
+        <div class="field field-full notification-editor">
+          <div class="notification-editor-header">
+            <span>Mattermost 通知內容 <b>*</b></span>
+            <button id="regenerateMattermostMessageButton" class="link-button" type="button">重新產生預設訊息</button>
+          </div>
+          <textarea id="subtaskMattermostMessage" rows="8" maxlength="16000" placeholder="選擇測試人員與 Deadline 後會自動產生，可在傳送前自由編輯。"></textarea>
+          <small id="mattermostMessageHint">選擇人員與 Deadline 後會自動產生通知內容。</small>
+        </div>
       </div>
 
       <div class="actions">

@@ -1,5 +1,10 @@
 const $ = (id) => document.getElementById(id);
-const state = { loadedKey: "", loadedSubtaskParentKey: "" };
+const state = {
+  loadedKey: "",
+  loadedSubtaskParentKey: "",
+  mattermostMessageEdited: false,
+  mattermostPreviewRequestId: 0,
+};
 
 const chineseMonths = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
 
@@ -229,6 +234,40 @@ function selectedMembers() {
 function updateSelectedMembers() {
   const count = selectedMembers().length;
   $("selectedMembersNote").textContent = count ? `已選擇 ${count} 位，將建立 ${count} 張子任務` : "尚未選擇測試人員";
+  refreshMattermostMessage();
+}
+
+async function refreshMattermostMessage(force = false) {
+  const parentKey = $("subtaskParentKey").value.trim().toUpperCase();
+  const members = selectedMembers();
+  const deadline = $("subtaskDeadline").value;
+  const message = $("subtaskMattermostMessage");
+  const hint = $("mattermostMessageHint");
+  if (!state.loadedSubtaskParentKey || parentKey !== state.loadedSubtaskParentKey || !members.length || !deadline) {
+    if (!state.mattermostMessageEdited || force) message.value = "";
+    hint.textContent = "請先讀取 QA 主單、選擇人員與 Deadline。";
+    return;
+  }
+  if (state.mattermostMessageEdited && !force) {
+    hint.textContent = "已手動編輯；人員或日期變更後可按「重新產生預設訊息」。";
+    return;
+  }
+  const requestId = ++state.mattermostPreviewRequestId;
+  hint.textContent = "正在產生預設通知內容…";
+  try {
+    const data = await request("/api/preview-subtask-message", {
+      method: "POST",
+      body: JSON.stringify({ parent_key: parentKey, members, deadline }),
+    });
+    if (requestId !== state.mattermostPreviewRequestId) return;
+    message.value = data.message || "";
+    state.mattermostMessageEdited = false;
+    hint.textContent = "可直接修改內容；實際傳送會使用這個文字框中的版本。";
+  } catch (error) {
+    if (requestId !== state.mattermostPreviewRequestId) return;
+    hint.textContent = `無法產生預設訊息：${error.message}`;
+    if (force) showSubtaskError(error.message);
+  }
 }
 
 async function loadSubtaskParent() {
@@ -247,8 +286,12 @@ async function loadSubtaskParent() {
     $("subtaskParentDates").textContent = `Start Date：${data.start_date || "未設定"}　到期日：${data.due_date || "未設定"}`;
     $("subtaskParentLink").href = data.parent_url;
     $("subtaskParentPanel").classList.remove("hidden");
+    state.mattermostMessageEdited = false;
+    refreshMattermostMessage();
   } catch (error) {
     state.loadedSubtaskParentKey = "";
+    state.mattermostMessageEdited = false;
+    $("subtaskMattermostMessage").value = "";
     $("subtaskParentPanel").classList.add("hidden");
     showSubtaskError(error.message);
   } finally {
@@ -268,11 +311,13 @@ async function createSubtasks() {
     original_estimate: $("originalEstimate").value.trim(),
     remaining_estimate: $("remainingEstimate").value.trim(),
     deadline: $("subtaskDeadline").value,
+    mattermost_message: $("subtaskMattermostMessage").value.trim(),
   };
   if (!payload.members.length) return showSubtaskError("請至少選擇一位測試人員。");
   if (!payload.original_estimate) return showSubtaskError("請填入原始預估時間。");
   if (!payload.remaining_estimate) return showSubtaskError("請填入剩餘時間。");
   if (!payload.deadline) return showSubtaskError("請選擇 Deadline。");
+  if (!payload.mattermost_message) return showSubtaskError("請確認或編輯 Mattermost 通知內容。");
   if (!window.confirm(`確定要在 ${state.loadedSubtaskParentKey} 下建立 ${payload.members.length} 張子任務？\nDeadline：${payload.deadline}\n\n${payload.members.join("、")}`)) return;
 
   setBusy($("createSubtaskButton"), true, `正在建立 ${payload.members.length} 張…`, "建立所選子任務");
@@ -330,6 +375,16 @@ $("subtaskParentKey").addEventListener("keydown", (event) => {
   if (event.key === "Enter") loadSubtaskParent();
 });
 $("createSubtaskButton").addEventListener("click", createSubtasks);
+$("subtaskDeadline").addEventListener("change", () => refreshMattermostMessage());
+$("subtaskMattermostMessage").addEventListener("input", () => {
+  state.mattermostMessageEdited = true;
+  state.mattermostPreviewRequestId += 1;
+  $("mattermostMessageHint").textContent = "已手動編輯；實際傳送會使用目前內容。";
+});
+$("regenerateMattermostMessageButton").addEventListener("click", () => {
+  state.mattermostMessageEdited = false;
+  refreshMattermostMessage(true);
+});
 $("clearMembersButton").addEventListener("click", () => {
   document.querySelectorAll('input[name="tester"]:checked').forEach((input) => { input.checked = false; });
   updateSelectedMembers();

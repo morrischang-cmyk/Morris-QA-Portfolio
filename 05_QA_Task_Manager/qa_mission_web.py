@@ -47,6 +47,7 @@ SESSION_COOKIE = "qa_session"
 REMEMBER_COOKIE = "qa_remember"
 SESSION_TTL_SECONDS = 12 * 60 * 60
 REMEMBER_TTL_SECONDS = 30 * 24 * 60 * 60
+MAX_MATTERMOST_MESSAGE_LENGTH = 16000
 _sessions: dict[str, dict[str, Any]] = {}
 _sessions_lock = threading.Lock()
 
@@ -606,7 +607,11 @@ def build_mattermost_subtask_message(
     usernames: list[str],
     jira_mattermost_mapping: dict[str, dict[str, str]],
     deadline: date,
+    custom_message: Any = None,
 ) -> tuple[str, date]:
+    edited = normalize_mattermost_message(custom_message)
+    if edited:
+        return edited, deadline
     mentions = " ".join(
         f"@{tester_mattermost_name(name, jira_mattermost_mapping)}" for name in usernames
     )
@@ -623,11 +628,56 @@ def build_mattermost_subtask_message(
     return message, deadline
 
 
+def normalize_mattermost_message(value: Any, required: bool = False) -> str:
+    message = str(value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
+    if required and not message:
+        raise ValueError("請確認或編輯 Mattermost 通知內容。")
+    if len(message) > MAX_MATTERMOST_MESSAGE_LENGTH:
+        raise ValueError(
+            f"Mattermost 通知內容不可超過 {MAX_MATTERMOST_MESSAGE_LENGTH} 個字元。"
+        )
+    return message
+
+
+def mattermost_mapping_for_usernames(
+    usernames: list[str],
+) -> dict[str, dict[str, str]]:
+    mapping = load_jira_mattermost_mapping()
+    missing = [
+        username for username in usernames if username.casefold() not in mapping
+    ]
+    if missing:
+        raise RedisError("Redis 缺少 Mattermost 對應：" + "、".join(missing))
+    return mapping
+
+
+def preview_mattermost_subtask_message(
+    payload: dict[str, Any], settings: JiraSettings | None = None
+) -> dict[str, str]:
+    rules = load_rules()
+    selected = validate_selected_members(payload.get("members"), rules.get("testers", []))
+    deadline = parse_iso_date(payload.get("deadline"), "Deadline")
+    parent_key = normalize_issue_key(str(payload.get("parent_key") or ""))
+    settings = settings or jira_settings()
+    parent_issue = JiraClient(settings).get_issue(parent_key)
+    mapping = mattermost_mapping_for_usernames(selected)
+    message, _ = build_mattermost_subtask_message(
+        parent_key,
+        str((parent_issue.get("fields") or {}).get("summary") or ""),
+        f"{settings.base_url.rstrip('/')}/browse/{parent_key}",
+        selected,
+        mapping,
+        deadline,
+    )
+    return {"message": message, "deadline": deadline.isoformat()}
+
+
 def send_mattermost_subtask_notification(
     parent_issue: dict[str, Any],
     created: list[dict[str, str]],
     deadline: date,
     jira_base_url: str,
+    custom_message: Any = None,
 ) -> dict[str, Any]:
     if not created:
         return {"sent": False, "configured": True}
@@ -636,14 +686,11 @@ def send_mattermost_subtask_notification(
         return {"sent": False, "configured": False}
     config = load_mattermost_config()
     client = MattermostClient(config["base_url"], saved["token"])
-    jira_mattermost_mapping = load_jira_mattermost_mapping()
-    missing = [
-        item["username"]
-        for item in created
-        if item["username"].casefold() not in jira_mattermost_mapping
-    ]
-    if missing:
-        raise RedisError("Redis 缺少 Mattermost 對應：" + "、".join(missing))
+    usernames = [item["username"] for item in created]
+    edited = normalize_mattermost_message(custom_message)
+    jira_mattermost_mapping = (
+        {} if edited else mattermost_mapping_for_usernames(usernames)
+    )
     channel_id = config.get("channel_id", "")
     if not channel_id:
         channel = client.find_channel(config["channel_name"])
@@ -654,9 +701,10 @@ def send_mattermost_subtask_notification(
         parent_key,
         str((parent_issue.get("fields") or {}).get("summary") or ""),
         f"{jira_base_url.rstrip('/')}/browse/{parent_key}",
-        [item["username"] for item in created],
+        usernames,
         jira_mattermost_mapping,
         deadline,
+        edited,
     )
     post = client.post(channel_id, message)
     return {
@@ -921,6 +969,7 @@ def create_qa_subtasks(
             created,
             deadline,
             settings.base_url,
+            normalize_mattermost_message(payload.get("mattermost_message")),
         )
     except Exception as error:
         mattermost = {
@@ -1140,6 +1189,8 @@ class QaMissionWebHandler(BaseHTTPRequestHandler):
                 result = create_qa_mission(payload, settings)
             elif path == "/api/load-subtask-parent":
                 result = load_subtask_parent(payload.get("parent_key"), settings)
+            elif path == "/api/preview-subtask-message":
+                result = preview_mattermost_subtask_message(payload, settings)
             elif path == "/api/create-subtask":
                 result = create_qa_subtask(payload, settings)
             elif path == "/api/create-subtasks":
